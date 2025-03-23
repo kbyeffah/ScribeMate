@@ -92,13 +92,13 @@ const Home: NextPage = () => {
               Unlock the Power of Words
             </h1>
             <p className="text-xl md:text-2xl text-navy-600 dark:text-navy-300 mt-3 font-light">
-              Our AI-powered Marketing Copy Generator
+              An AI-powered Marketing Copy Generator
             </p>
           </div>
 
           <div className="w-full bg-gradient-to-br from-white to-navy-50 dark:from-gray-900 dark:to-navy-900 bg-opacity-95 dark:bg-opacity-95 shadow-xl rounded-3xl p-8 transition-all duration-300 hover:shadow-2xl">
             <h2 className="text-2xl md:text-3xl font-bold mb-6 text-center text-navy-800 dark:text-navy-200 font-sans">
-              Create Your Copy
+              Generate Your Copy
             </h2>
 
             <div className="space-y-8">
@@ -112,7 +112,7 @@ const Home: NextPage = () => {
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   className="w-full px-5 py-4 text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 border border-navy-200 dark:border-navy-700 rounded-2xl focus:outline-none focus:ring-2 focus:ring-navy-500 focus:border-transparent transition-all duration-300 shadow-sm hover:shadow-md resize-none"
-                  placeholder="e.g., Premium Coffee Beans"
+                  placeholder="eg: Premium Coffee Beans"
                 />
                 <div className="flex justify-between mt-3 text-sm">
                   <span className={error ? 'text-red-500' : 'text-gray-500 dark:text-gray-400'}>
