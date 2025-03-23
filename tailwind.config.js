@@ -9,10 +9,22 @@ module.exports = {
   darkMode: 'class',
   theme: {
     extend: {
-
+      colors: {
+        navy: {
+          50: '#f0f2f5',
+          200: '#c2cddd',
+          300: '#a3b1cc',
+          400: '#8495bb',
+          500: '#6579aa',
+          600: '#4b5e7e',
+          700: '#3b4a66',
+          800: '#2b374d',
+          900: '#1b2333',
+        },
+      },
     },
   },
-    plugins: [
+  plugins: [
     addVariablesForColors,
     function ({ matchUtilities, theme }) {
       matchUtilities(
@@ -28,14 +40,13 @@ module.exports = {
     },
   ],
 };
- 
-// This plugin adds each Tailwind color as a global CSS variable, e.g. var(--gray-200).
+
 function addVariablesForColors({ addBase, theme }) {
   let allColors = flattenColorPalette(theme("colors"));
   let newVars = Object.fromEntries(
     Object.entries(allColors).map(([key, val]) => [`--${key}`, val])
   );
- 
+
   addBase({
     ":root": newVars,
   });

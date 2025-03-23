@@ -3,6 +3,7 @@ import Head from "next/head";
 import { useEffect, useState } from "react";
 import { MoonLoader } from "react-spinners";
 import { HeroHighlightDemo } from "../components/HeroHighlightDemo";
+import { Moon, Sun } from "lucide-react";
 
 const Home: NextPage = () => {
   const [input, setInput] = useState("");
@@ -10,17 +11,23 @@ const Home: NextPage = () => {
   const [suggestion, setSuggestion] = useState("");
   const [loading, setLoading] = useState(false);
   const [apiError, setApiError] = useState("");
+  const [darkMode, setDarkMode] = useState(false);
 
   useEffect(() => {
-    if (input.length <= 100) setError(false); // Changed < to <= for clarity
+    if (input.length <= 100) setError(false);
   }, [input]);
+
+  useEffect(() => {
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    setDarkMode(prefersDark);
+  }, []);
 
   const submit = async () => {
     if (input.length > 100) {
       setError(true);
       return;
     }
-    if (!input.trim()) { // Added check for empty/whitespace input
+    if (!input.trim()) {
       setApiError("Please enter a topic to generate copy.");
       return;
     }
@@ -41,7 +48,7 @@ const Home: NextPage = () => {
         throw new Error(errorResponse.error || "Something went wrong");
       }
 
-      const { copy } = await res.json(); // Changed "result" to "copy"
+      const { copy } = await res.json();
       setSuggestion(copy);
     } catch (error: any) {
       console.error("API Error:", error.message);
@@ -54,13 +61,16 @@ const Home: NextPage = () => {
   const copyToClipboard = () => {
     if (suggestion) {
       navigator.clipboard.writeText(suggestion);
-      // Optional: Add feedback (e.g., toast notification) here
       console.log("Copied to clipboard:", suggestion);
     }
   };
 
+  const toggleTheme = () => {
+    setDarkMode(!darkMode);
+  };
+
   return (
-    <div className="relative min-h-screen">
+    <div className={`relative min-h-screen ${darkMode ? 'dark' : ''}`}>
       <Head>
         <title>Marketing Copy Generator</title>
         <meta name="description" content="AI-generated marketing copy" />
@@ -71,70 +81,93 @@ const Home: NextPage = () => {
         <HeroHighlightDemo />
       </div>
 
-      <div className="relative z-10 max-w-4xl mx-auto p-10 flex flex-col justify-end min-h-screen">
-        <div className="bg-white bg-opacity-80 shadow-lg rounded-lg p-8">
-          <h2 className="text-3xl font-bold mb-4 text-center text-purple-800">
-            Start Here
-          </h2>
-          <div className="mb-4">
-            <label htmlFor="input" className="block mb-2 font-bold text-gray-700">
-              Enter your topic:
-            </label>
-            <textarea
-              id="input"
-              rows={3}
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              className="w-full px-3 py-2 text-gray-700 border rounded-lg focus:outline-none focus:border-purple-500"
-              placeholder="Enter your topic here (e.g., Fresh Coffee)"
-            />
-            {error && (
-              <p className="text-red-500 text-sm mt-1">
-                Character limit exceeded, please enter less text.
-              </p>
-            )}
-            <div className="text-right mt-2 text-gray-500 text-sm">
-              <span>{input.length}</span>/100
-            </div>
+      <div className="relative z-10 max-w-3xl mx-auto p-6 md:p-8 flex flex-col min-h-screen">
+        <div className="flex justify-end mb-6">
+          <button
+            onClick={toggleTheme}
+            className="p-2 rounded-full bg-navy-50 dark:bg-navy-800 text-navy-700 dark:text-navy-200 hover:bg-navy-100 dark:hover:bg-navy-700 transition-colors duration-300 shadow-md"
+          >
+            {darkMode ? <Sun size={20} /> : <Moon size={20} />}
+          </button>
+        </div>
+
+        <div className="flex-grow flex flex-col items-center justify-center">
+          <div className="text-center mb-10">
+            <h1 className="text-4xl md:text-5xl font-extrabold text-navy-800 dark:text-navy-200 leading-tight font-sans">
+              Unlock the Power of Words
+            </h1>
+            <p className="text-xl md:text-2xl text-navy-600 dark:text-navy-300 mt-3 font-light">
+              Our AI-powered Marketing Copy Generator
+            </p>
           </div>
 
-          <button
-            type="button"
-            onClick={submit}
-            className="w-full px-4 py-2 font-bold text-white bg-purple-500 rounded-lg hover:bg-purple-600 focus:outline-none focus:shadow-outline disabled:bg-purple-300"
-            disabled={loading}
-          >
-            {loading ? (
-              <div className="flex justify-center items-center">
-                <MoonLoader size={20} color="white" />
-                <span className="ml-2">Generating...</span>
-              </div>
-            ) : (
-              "Generate"
-            )}
-          </button>
+          <div className="w-full bg-gradient-to-br from-white to-navy-50 dark:from-gray-900 dark:to-navy-900 bg-opacity-95 dark:bg-opacity-95 shadow-xl rounded-3xl p-8 transition-all duration-300 hover:shadow-2xl">
+            <h2 className="text-2xl md:text-3xl font-bold mb-6 text-center text-navy-800 dark:text-navy-200 font-sans">
+              Create Your Copy
+            </h2>
 
-          {apiError && (
-            <p className="text-red-500 text-sm mt-4">{apiError}</p>
-          )}
-
-          {suggestion && (
-            <div className="mt-8">
-              <h3 className="text-xl font-bold mb-2 text-purple-800">
-                Your marketing copy:
-              </h3>
-              <div className="bg-purple-100 rounded-lg p-4 max-h-40 overflow-y-auto">
-                <p className="text-gray-800">{suggestion}</p>
+            <div className="space-y-8">
+              <div>
+                <label htmlFor="input" className="block mb-2 font-medium text-gray-700 dark:text-gray-300">
+                  Enter Your Topic
+                </label>
+                <textarea
+                  id="input"
+                  rows={4}
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  className="w-full px-5 py-4 text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 border border-navy-200 dark:border-navy-700 rounded-2xl focus:outline-none focus:ring-2 focus:ring-navy-500 focus:border-transparent transition-all duration-300 shadow-sm hover:shadow-md resize-none"
+                  placeholder="e.g., Premium Coffee Beans"
+                />
+                <div className="flex justify-between mt-3 text-sm">
+                  <span className={error ? 'text-red-500' : 'text-gray-500 dark:text-gray-400'}>
+                    {error && "Max 100 characters"}
+                  </span>
+                  <span className="text-gray-500 dark:text-gray-400">
+                    {input.length}/100
+                  </span>
+                </div>
               </div>
+
               <button
                 type="button"
-                onClick={copyToClipboard}
-                className="mt-4 px-4 py-2 font-bold text-white bg-purple-500 rounded-lg hover:bg-purple-600 focus:outline-none focus:shadow-outline"
+                onClick={submit}
+                disabled={loading}
+                className="w-full px-6 py-4 font-semibold text-white bg-gradient-to-r from-navy-600 to-navy-700 dark:from-navy-500 dark:to-navy-600 rounded-2xl hover:from-navy-700 hover:to-navy-800 dark:hover:from-navy-600 dark:hover:to-navy-700 focus:outline-none focus:ring-4 focus:ring-navy-300 dark:focus:ring-navy-800 disabled:opacity-70 disabled:cursor-not-allowed transition-all duration-300 shadow-lg hover:shadow-xl"
               >
-                Copy Text
+                {loading ? (
+                  <div className="flex justify-center items-center">
+                    <MoonLoader size={20} color="white" />
+                    <span className="ml-2">Generating...</span>
+                  </div>
+                ) : (
+                  "Generate Copy"
+                )}
               </button>
+
+              {apiError && (
+                <p className="text-red-500 dark:text-red-400 text-sm text-center">{apiError}</p>
+              )}
+
+              {suggestion && (
+                <div className="space-y-4">
+                  <h3 className="text-lg font-semibold text-navy-800 dark:text-navy-200">
+                    Your Marketing Copy
+                  </h3>
+                  <div className="bg-white dark:bg-gray-800 rounded-2xl p-5 max-h-52 overflow-y-auto text-gray-800 dark:text-gray-200 border border-navy-200 dark:border-navy-700 shadow-inner">
+                    <p>{suggestion}</p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={copyToClipboard}
+                    className="w-full px-6 py-3 font-semibold text-navy-600 dark:text-navy-300 bg-navy-50 dark:bg-navy-800 rounded-2xl hover:bg-navy-100 dark:hover:bg-navy-700 focus:outline-none focus:ring-2 focus:ring-navy-500 transition-all duration-300 shadow-md"
+                  >
+                    Copy to Clipboard
+                  </button>
+                </div>
+              )}
             </div>
-          )}
+          </div>
         </div>
       </div>
     </div>
