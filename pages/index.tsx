@@ -11,16 +11,11 @@ const Home: NextPage = () => {
   const [suggestion, setSuggestion] = useState("");
   const [loading, setLoading] = useState(false);
   const [apiError, setApiError] = useState("");
-  const [darkMode, setDarkMode] = useState(false);
+  const [darkMode, setDarkMode] = useState(false); // Default to false (light mode)
 
   useEffect(() => {
     if (input.length <= 100) setError(false);
   }, [input]);
-
-  useEffect(() => {
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    setDarkMode(prefersDark);
-  }, []);
 
   const submit = async () => {
     if (input.length > 100) {
